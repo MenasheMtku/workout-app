@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Inter } from "@next/font/google";
 import Layout from "../components/Layout";
-import { WorkoutsContextProvider } from "@/context/WorkoutoutContext";
+import { WorkoutsContextProvider } from "@/context/WorkoutContext";
 
 const inter = Inter({
   subsets: ["latin"],

@@ -24,3 +24,43 @@ body {
     text-wrap: balance;
   }
 } */
+.login {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  background: hsl(217, 12%, 73%);
+}
+
+.login h3 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.login label {
+  display: block;
+  margin-bottom: 10px;
+}
+.login input,
+.login button {
+  display: block;
+  border: 0;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.login button {
+  background: hsl(187, 90%, 21%);
+  color: #fff;
+  cursor: pointer;
+}
+
+.error {
+  padding: 10px;
+  background: #ffefef;
+  border: 1px solid var(--error);
+  color: var(--error);
+  border-radius: 4px;
+  margin: 20px 0;
+}

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import Navbar from "./Navbar";
+import { AuthContextProvider } from "@/context/AuthContext";
 
 interface LayoutProps {
   children: ReactNode;
@@ -7,9 +8,9 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="max-w-[1400px] mx-auto">
+    <AuthContextProvider>
       <Navbar />
-      <main className="mx-auto p-4">{children}</main>
-    </div>
+      <main className="max-w-[1440px] mx-auto p-4">{children}</main>
+    </AuthContextProvider>
   );
 }

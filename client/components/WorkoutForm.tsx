@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useWorkoutsContext } from "@/hooks/useWorkoutContext";
 import { Workout } from "@/types/Workout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 interface WorkoutFormProps {
   selectedWorkout?: Workout | null;
@@ -13,6 +14,8 @@ export default function WorkoutForm({
   resetSelectedWorkout,
 }: WorkoutFormProps) {
   const { dispatch } = useWorkoutsContext();
+  const { state } = useAuthContext();
+
   const [title, setTitle] = useState("");
   const [reps, setReps] = useState("");
   const [load, setLoad] = useState("");
@@ -43,6 +46,17 @@ export default function WorkoutForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!state.user) {
+      setError("You must be logged in to add a workout");
+      return;
+    }
+    const config = {
+      headers: {
+        // Add user token here
+        Authorization: `Bearer ${state.user.token}`,
+      },
+    };
     // Convert reps and load back to numbers before sending the request
     const workout = { title, reps: Number(reps), load: Number(load) };
 
@@ -58,7 +72,8 @@ export default function WorkoutForm({
         console.log(selectedWorkout);
         response = await axios.put(
           `http://localhost:8080/api/workouts/${selectedWorkout._id}`,
-          workout
+          workout,
+          config
         );
         dispatch({ type: "UPDATE_WORKOUT", payload: response.data });
         setSuccess("Workout updated successfully!");
@@ -66,12 +81,14 @@ export default function WorkoutForm({
         // Add a new workout
         response = await axios.post(
           "http://localhost:8080/api/workouts",
-          workout
+          workout,
+          config
         );
         setSuccess("Workout added successfully!");
         // Dispatch the new workout to update the state without reloading the page
         dispatch({ type: "CREATE_WORKOUT", payload: response.data });
-        console.log(response.data); // Debugging or to do something with the response
+        // Debugging or to do something with the response
+        console.log(response.data);
       }
       // Reset the form after success
       resetForm();

@@ -2,15 +2,6 @@ import { createContext, useReducer, ReactNode, Dispatch } from "react";
 
 import { Workout } from "@/types/Workout";
 
-// Define the structure of the workout state
-// interface Workout {
-//   _id: string;
-//   title: string;
-//   reps: number;
-//   load: number;
-//   createdAt: string;
-// }
-
 // Define the structure of the context state
 interface WorkoutsState {
   workouts: Workout[] | null;
@@ -18,7 +9,7 @@ interface WorkoutsState {
 
 // Define action types for the reducer
 type WorkoutAction =
-  | { type: "SET_WORKOUTS"; payload: Workout[] }
+  | { type: "SET_WORKOUTS"; payload: Workout[] | null }
   | { type: "CREATE_WORKOUT"; payload: Workout }
   | { type: "DELETE_WORKOUT"; payload: Workout }
   | { type: "UPDATE_WORKOUT"; payload: Workout };

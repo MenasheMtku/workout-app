@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { FC } from "react";
 import axios from "axios";
+import { FC, useState } from "react";
 // import trash icon
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 
 import { formatDistanceToNow } from "date-fns";
 
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useWorkoutsContext } from "@/hooks/useWorkoutContext";
 
 // Workout interface
@@ -19,12 +19,20 @@ interface WorkoutProps {
 
 const WorkoutDetails: FC<WorkoutProps> = ({ workout, onEdit }) => {
   const { dispatch } = useWorkoutsContext();
+  const { state } = useAuthContext();
   const [editselectedWorkout, setEditSelectedWorkout] =
     useState<Workout | null>(null);
 
   const handleDelete = async () => {
+    if (!state.user) {
+      return;
+    }
     try {
-      await axios.delete(`http://localhost:8080/api/workouts/${workout._id}`);
+      await axios.delete(`http://localhost:8080/api/workouts/${workout._id}`, {
+        headers: {
+          Authorization: `Bearer ${state.user.token}`,
+        },
+      });
       dispatch({ type: "DELETE_WORKOUT", payload: workout });
     } catch (error) {
       console.error("Error deleting workout:", error);

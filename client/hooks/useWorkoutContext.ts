@@ -1,7 +1,4 @@
-import {
-  WorkoutsContext,
-  WorkoutsContextType,
-} from "@/context/WorkoutoutContext";
+import { WorkoutsContext, WorkoutsContextType } from "@/context/WorkoutContext";
 import { useContext } from "react";
 
 export const useWorkoutsContext = (): WorkoutsContextType => {

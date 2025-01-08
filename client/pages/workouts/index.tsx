@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import axios from "axios";
 
 // components
@@ -14,6 +15,9 @@ import { useWorkoutsContext } from "@/hooks/useWorkoutContext";
 export default function Workouts() {
   const { workouts, dispatch } = useWorkoutsContext();
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
+
+  const { state } = useAuthContext();
+
   const resetSelectedWorkout = () => {
     // Reset to null to go back to "Add Workout" mode
     setSelectedWorkout(null);
@@ -23,7 +27,12 @@ export default function Workouts() {
     const fetchWorkouts = async () => {
       try {
         const response = await axios.get<Workout[]>(
-          "http://localhost:8080/api/workouts"
+          "http://localhost:8080/api/workouts",
+          {
+            headers: {
+              Authorization: `Bearer ${state.user?.token}`,
+            },
+          }
         );
         dispatch({ type: "SET_WORKOUTS", payload: response.data });
       } catch (error) {
@@ -31,8 +40,10 @@ export default function Workouts() {
       }
     };
 
-    fetchWorkouts();
-  }, [dispatch]);
+    if (state.user) {
+      fetchWorkouts();
+    }
+  }, [dispatch, state.user]);
 
   const handleEditWorkout = (workout: Workout) => {
     setSelectedWorkout(workout);
@@ -43,7 +54,7 @@ export default function Workouts() {
       <h1 className="text-center py-3 text-3xl">Workouts Page</h1>
 
       <div className="grid grid-cols-[2fr_1fr] gap-4">
-        <div>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4">
           {workouts &&
             workouts.map((workout: Workout) => (
               <WorkoutDetails
