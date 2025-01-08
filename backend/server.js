@@ -5,13 +5,19 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const port = process.env.PORT || 8080;
 const workoutRoutes = require("./routes/workouts");
+const userRoutes = require("./routes/user");
 
 // express app
 const app = express();
 
 // middleware
 app.use(express.json());
-app.use(cors()); // Enable CORS for cross-origin requests
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Change to your frontend's URL
+    credentials: true, // If you need to send cookies or authentication
+  })
+);
 
 app.use((req, res, next) => {
   console.log(req.path, req.method);
@@ -23,6 +29,7 @@ app.get("/", (req, res) => {
   res.json({ mssg: "Welcome to the app - (message from the backEnd)" });
 });
 app.use("/api/workouts", workoutRoutes);
+app.use("/api/user", userRoutes);
 
 // connect to DB
 mongoose
